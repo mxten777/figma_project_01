@@ -183,17 +183,9 @@ function App() {
   };
 
   const StepComponent = stepComponents[step];
-  const stepProps = step === 0 
+  const stepProps: any = step === 0 
     ? { onLoad: handleFigmaLoad, loading, error }
-    : step === 2 
-    ? { figmaData }
-    : step === 3
-    ? { figmaData }
-    : step === 4
-    ? { figmaData }
-    : step === 5
-    ? { figmaData }
-    : {};
+    : { figmaData };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex flex-col items-center py-12 px-4 transition-colors duration-300">
