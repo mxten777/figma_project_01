@@ -143,10 +143,10 @@ function App() {
     
     // 캐시 확인
     const cacheKey = `figma_${fileKey}`;
-    const cached = localStorage.getItem(cacheKey);
-    
-    if (cached) {
-      try {
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      
+      if (cached) {
         const cachedData = JSON.parse(cached);
         const cacheTime = localStorage.getItem(`${cacheKey}_time`);
         const now = Date.now();
@@ -158,9 +158,10 @@ function App() {
           setLoading(false);
           return;
         }
-      } catch (e) {
-        console.log("캐시 읽기 실패:", e);
       }
+    } catch (e) {
+      console.log("캐시 읽기 실패:", e);
+      // 캐시 오류는 무시하고 계속 진행
     }
     
     try {
@@ -169,9 +170,13 @@ function App() {
       const textStyles = extractTextStyles(data.document);
       const result = { ...data, extractedColors: colors, extractedTextStyles: textStyles };
       
-      // 캐싱
-      localStorage.setItem(cacheKey, JSON.stringify(result));
-      localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+      // 캐싱 (오류 발생해도 계속 진행)
+      try {
+        localStorage.setItem(cacheKey, JSON.stringify(result));
+        localStorage.setItem(`${cacheKey}_time`, Date.now().toString());
+      } catch (e) {
+        console.log("캐시 저장 실패:", e);
+      }
       
       setFigmaData(result);
       setStep(1); // 자동으로 다음 단계로
