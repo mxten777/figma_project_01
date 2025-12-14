@@ -181,7 +181,27 @@ function App() {
       setFigmaData(result);
       setStep(1); // 자동으로 다음 단계로
     } catch (err: any) {
-      setError(err.message);
+      // Rate limit이나 API 오류 시 샘플 데이터로 대체
+      if (err.message.includes('429') || err.message.includes('Too Many Requests')) {
+        setError('⚠️ Figma API 요청 한도 초과. 샘플 데이터로 데모를 진행합니다. (5-10분 후 실제 파일로 재시도 가능)');
+      } else {
+        setError(err.message);
+      }
+      
+      // 샘플 데이터로 계속 진행
+      const sampleData = {
+        name: "Figma Demo (샘플 데이터)",
+        lastModified: new Date().toISOString(),
+        extractedColors: ["#5551ff", "#f24e1e", "#ff7262", "#1abcfe", "#0acf83", "#a259ff", "#ffcd29", "#000000"],
+        extractedTextStyles: [
+          { fontFamily: "Inter", fontSize: 48, fontWeight: 700 },
+          { fontFamily: "Inter", fontSize: 32, fontWeight: 600 },
+          { fontFamily: "Inter", fontSize: 24, fontWeight: 500 },
+          { fontFamily: "Inter", fontSize: 16, fontWeight: 400 },
+        ]
+      };
+      setFigmaData(sampleData);
+      setStep(1);
     } finally {
       setLoading(false);
     }
