@@ -214,25 +214,81 @@ function App() {
     : { figmaData };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 flex flex-col items-center py-12 px-4 transition-colors duration-300">
-      <div className="absolute top-4 right-4">
-        <ThemeToggle />
-      </div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Animated Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950 animate-gradient" />
       
-      {/* Hero Section with Animation */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center"
-      >
-        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
-          Figma → Frontend 변환 데모
-        </h1>
-        <p className="text-slate-600 dark:text-slate-300 mb-8">
-          디자인이 코드로 변환되는 과정을 단계별로 확인하세요
-        </p>
-      </motion.div>
+      {/* Floating Orbs */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
+      
+      {/* Content Container */}
+      <div className="relative z-10 flex flex-col items-center py-12 px-4 transition-colors duration-300">
+        <div className="absolute top-4 right-4">
+          <ThemeToggle />
+        </div>
+        
+        {/* Progress Indicator */}
+        <div className="w-full max-w-3xl mb-6">
+          <div className="flex justify-between items-center mb-2">
+            {steps.map((_, i) => (
+              <div key={i} className="flex items-center flex-1">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
+                    i === step
+                      ? 'bg-blue-600 text-white shadow-lg scale-110 glow'
+                      : i < step
+                      ? 'bg-green-500 text-white'
+                      : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
+                  }`}
+                >
+                  {i < step ? '✓' : i + 1}
+                </motion.div>
+                {i < steps.length - 1 && (
+                  <div className="flex-1 h-1 mx-2">
+                    <div className="h-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                        initial={{ width: '0%' }}
+                        animate={{ width: i < step ? '100%' : '0%' }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      
+        {/* Hero Section with Enhanced Glassmorphism */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <motion.h1 
+            className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent"
+            animate={{
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            style={{ backgroundSize: '200% 200%' }}
+          >
+            Figma → Frontend 변환 데모
+          </motion.h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 mb-4">
+            디자인이 코드로 변환되는 과정을 단계별로 확인하세요
+          </p>
+        </motion.div>
       
       {/* File Name Display */}
       <AnimatePresence mode="wait">
@@ -287,8 +343,8 @@ function App() {
         transition={{ duration: 0.5, delay: 0.3 }}
         className="w-full max-w-3xl"
       >
-        <Card className="shadow-xl border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur">
-          <CardContent className="p-8 min-h-[400px]">
+        <Card className="shadow-2xl border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl glow">
+          <CardContent className="p-8 min-h-[500px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={step}
@@ -303,6 +359,7 @@ function App() {
           </CardContent>
         </Card>
       </motion.div>
+      </div>
     </div>
   );
 }
