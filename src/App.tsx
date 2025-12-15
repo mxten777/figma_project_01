@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Info } from "lucide-react";
+import { Info, ChevronLeft, ChevronRight } from "lucide-react";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { FigmaInput } from "./components/FigmaInput";
 import { getFigmaFile, extractColors, extractTextStyles } from "@/lib/figmaApi";
@@ -137,6 +137,20 @@ function App() {
   const [figmaData, setFigmaData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Keyboard Navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && step > 0) {
+        setStep(step - 1);
+      } else if (e.key === 'ArrowRight' && step < steps.length - 1) {
+        setStep(step + 1);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [step]);
 
   const handleFigmaLoad = async (fileKey: string, accessToken: string) => {
     setLoading(true);
@@ -341,7 +355,7 @@ function App() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="w-full max-w-3xl"
+        className="w-full max-w-3xl relative"
       >
         <Card className="shadow-2xl border-slate-200/50 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl glow">
           <CardContent className="p-8 min-h-[500px]">
@@ -358,6 +372,47 @@ function App() {
             </AnimatePresence>
           </CardContent>
         </Card>
+        
+        {/* Navigation Arrows */}
+        <div className="absolute top-1/2 -translate-y-1/2 -left-16 -right-16 flex justify-between pointer-events-none">
+          <motion.button
+            onClick={() => step > 0 && setStep(step - 1)}
+            disabled={step === 0}
+            className={`pointer-events-auto p-3 rounded-full backdrop-blur-sm border transition-all ${
+              step === 0
+                ? 'bg-slate-200/50 border-slate-300 text-slate-400 cursor-not-allowed'
+                : 'bg-white/80 dark:bg-slate-800/80 border-slate-300 dark:border-slate-600 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 shadow-lg hover:shadow-xl'
+            }`}
+            whileHover={step > 0 ? { scale: 1.1, x: -5 } : {}}
+            whileTap={step > 0 ? { scale: 0.95 } : {}}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </motion.button>
+          
+          <motion.button
+            onClick={() => step < steps.length - 1 && setStep(step + 1)}
+            disabled={step === steps.length - 1}
+            className={`pointer-events-auto p-3 rounded-full backdrop-blur-sm border transition-all ${
+              step === steps.length - 1
+                ? 'bg-slate-200/50 border-slate-300 text-slate-400 cursor-not-allowed'
+                : 'bg-white/80 dark:bg-slate-800/80 border-slate-300 dark:border-slate-600 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 shadow-lg hover:shadow-xl'
+            }`}
+            whileHover={step < steps.length - 1 ? { scale: 1.1, x: 5 } : {}}
+            whileTap={step < steps.length - 1 ? { scale: 0.95 } : {}}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </motion.button>
+        </div>
+        
+        {/* Keyboard Hint */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="mt-4 text-center text-sm text-slate-500 dark:text-slate-400"
+        >
+          💡 키보드 ← → 키로도 이동할 수 있습니다
+        </motion.div>
       </motion.div>
       </div>
     </div>
