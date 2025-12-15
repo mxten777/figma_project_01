@@ -1,5 +1,6 @@
 // FigmaInput.tsx
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,15 +64,26 @@ export function FigmaInput({ onLoad, loading, error }: FigmaInputProps) {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <Button type="submit" disabled={loading || !fileKey || !accessToken} className="w-full">
-            {loading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                불러오는 중...
-              </>
-            ) : (
-              "Figma 파일 불러오기"
-            )}
+          <Button 
+            type="submit" 
+            disabled={loading || !fileKey || !accessToken} 
+            className="w-full relative overflow-hidden group"
+          >
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100"
+              initial={false}
+              transition={{ duration: 0.3 }}
+            />
+            <span className="relative z-10 flex items-center justify-center">
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  불러오는 중...
+                </>
+              ) : (
+                "Figma 파일 불러오기"
+              )}
+            </span>
           </Button>
         </form>
       </CardContent>

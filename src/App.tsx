@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -217,32 +218,91 @@ function App() {
       <div className="absolute top-4 right-4">
         <ThemeToggle />
       </div>
-      <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Figma → Frontend 변환 데모</h1>
-      <p className="text-slate-600 dark:text-slate-300 mb-8 text-center">디자인이 코드로 변환되는 과정을 단계별로 확인하세요</p>
-      {figmaData && (
-        <div className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-          📁 불러온 파일: <strong>{figmaData.name}</strong>
-        </div>
-      )}
-      <div className="flex flex-wrap gap-2 mb-8 justify-center">
-        {steps.map((s, i) => (
-          <Button
-            key={s.label}
-            variant={step === i ? "default" : "outline"}
-            onClick={() => setStep(i)}
-            className="transition-all duration-300 hover:scale-105"
+      
+      {/* Hero Section with Animation */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-center"
+      >
+        <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
+          Figma → Frontend 변환 데모
+        </h1>
+        <p className="text-slate-600 dark:text-slate-300 mb-8">
+          디자인이 코드로 변환되는 과정을 단계별로 확인하세요
+        </p>
+      </motion.div>
+      
+      {/* File Name Display */}
+      <AnimatePresence mode="wait">
+        {figmaData && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="text-sm text-slate-600 dark:text-slate-400 mb-4"
           >
-            {i + 1}. {s.label}
-          </Button>
+            📁 불러온 파일: <strong>{figmaData.name}</strong>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      {/* Step Navigation with Stagger Animation */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={{
+          visible: {
+            transition: {
+              staggerChildren: 0.1
+            }
+          }
+        }}
+        className="flex flex-wrap gap-2 mb-8 justify-center"
+      >
+        {steps.map((s, i) => (
+          <motion.div
+            key={s.label}
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 }
+            }}
+          >
+            <Button
+              variant={step === i ? "default" : "outline"}
+              onClick={() => setStep(i)}
+              className="transition-all duration-300 hover:scale-105"
+            >
+              {i + 1}. {s.label}
+            </Button>
+          </motion.div>
         ))}
-      </div>
-      <Card className="w-full max-w-3xl shadow-xl border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur transition-all duration-300 animate-in fade-in slide-in-from-bottom-4">
-        <CardContent className="p-8 min-h-[400px]">
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500" key={step}>
-            <StepComponent {...stepProps} />
-          </div>
-        </CardContent>
-      </Card>
+      </motion.div>
+      
+      {/* Main Card with Step Content */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="w-full max-w-3xl"
+      >
+        <Card className="shadow-xl border-slate-200 dark:border-slate-700 bg-white/80 dark:bg-slate-800/80 backdrop-blur">
+          <CardContent className="p-8 min-h-[400px]">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={step}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <StepComponent {...stepProps} />
+              </motion.div>
+            </AnimatePresence>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 }
