@@ -2,10 +2,11 @@
 
 Figma 디자인 파일을 React + TailwindCSS 코드로 변환하는 과정을 시각적으로 보여주는 MVP 데모 애플리케이션입니다.
 
-[![Vercel Deploy](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://figma-projet-01-dqw9nos83-dongyeol-jungs-projects.vercel.app)
+[![Vercel Deploy](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://figma-projet-01-q9b32pf72-dongyeol-jungs-projects.vercel.app)
 [![React](https://img.shields.io/badge/React-18-blue?logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.0-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-Latest-FF0055?logo=framer)](https://www.framer.com/motion/)
 
 ## 📑 목차
 
@@ -47,12 +48,24 @@ Figma 디자인 파일을 React + TailwindCSS 코드로 변환하는 과정을 �
 5. **Code Output**: 생성된 React + Tailwind 코드 (문법 하이라이팅)
 6. **Live Preview**: 실제 렌더링된 컴포넌트 실시간 미리보기
 
-### 3️⃣ **프리미엄 UI/UX**
-- 🌓 다크 모드 지원 (라이트/다크/시스템 테마)
-- 🎨 Gradient 배경, Backdrop Blur 효과
-- ✨ 부드러운 애니메이션 (fade-in, slide-in)
-- 📱 반응형 디자인
-- 🎯 shadcn/ui 기반 고품질 컴포넌트
+### 3️⃣ **프리미엄 UI/UX** ⭐ NEW!
+- 🌓 **다크 모드**: 라이트/다크/시스템 테마 완벽 지원
+- 🎨 **애니메이션**: Framer Motion 기반 60fps 부드러운 전환
+  - 단계별 페이드인/슬라이드 전환
+  - 컴포넌트 stagger 효과
+  - 3D 카드 호버 효과 (rotateY)
+  - 버튼 리플 효과
+- 🌌 **Glassmorphism**: Backdrop blur + 그라데이션 배경
+  - 애니메이션 그라데이션 (60초 루프)
+  - 떠다니는 오브 효과 (3개)
+- 📊 **진행 상태 표시**: 애니메이션 프로그레스 인디케이터
+- ⌨️ **키보드 네비게이션**: ← → 화살표 키로 단계 이동
+- 🎯 **인터랙션**: 30+ 마이크로 인터랙션
+  - 클릭-투-복사 (디자인 토큰)
+  - 플로팅 복사 버튼 (코드 블록)
+  - 호버 시 스케일/회전 효과
+- 🎨 **타이포그래피**: Inter Variable Font (300-900 weight)
+- 📱 **반응형**: 모바일/태블릿/데스크탑 최적화
 
 ### 4️⃣ **자동 캐싱 시스템**
 - localStorage 기반 1시간 캐싱
@@ -77,9 +90,11 @@ Figma 디자인 파일을 React + TailwindCSS 코드로 변환하는 과정을 �
 - **shadcn/ui** - 고품질 React 컴포넌트 라이브러리
 
 ### Libraries
+- **Framer Motion** - 애니메이션 라이브러리 (30+ 인터랙션)
 - **lucide-react** - 아이콘 라이브러리
-- **react-syntax-highlighter** - 코드 문법 하이라이팅
+- **react-syntax-highlighter** - 코드 문법 하이라이팅 + 라인 넘버
 - **Figma REST API** - 디자인 데이터 추출
+- **Inter Font** - Google Fonts Variable Font
 
 ### DevOps
 - **Vercel** - 프로덕션 배포
@@ -212,9 +227,13 @@ vercel --prod
 
 ### `App.tsx`
 - 6단계 네비게이션 관리
+  - 키보드 네비게이션 (useEffect → ArrowLeft/Right)
+  - 애니메이션 페이지 전환 (AnimatePresence)
+  - 프로그레스 인디케이터 (동적 그라디언트)
 - Figma 데이터 상태 관리 (useState)
-- 캐싱 로직 (localStorage)
+- 캐싱 로직 (localStorage, 1시간 TTL)
 - 에러 핸들링 (429 Rate Limit 대응)
+- 애니메이션 배경 (그라데이션 + 플로팅 오브)
 
 ### `figmaApi.ts`
 ```typescript
@@ -229,7 +248,11 @@ extractTextStyles(node: FigmaNode): FigmaTextStyle[]
 ```
 
 ### `TokenVisualizer.tsx`
-- 추출된 디자인 토큰을 카드 형태로 표시
+- 추출된 디자인 토큰을 3D 카드로 표시
+- **인터랙션**:
+  - 클릭-투-복사 (색상 코드 복사)
+  - 3D 호버 효과 (rotateY ±5도)
+  - 복사 피드백 (Check 아이콘 애니메이션)
 - 색상: 8개 주요 색상 (primary, secondary, accent 등)
 - 폰트: 폰트 패밀리, 크기, 굵기
 - 간격: 4px ~ 96px
@@ -326,7 +349,7 @@ MIT License
 
 ---
 
-**🚀 Live Demo**: [https://figma-projet-01-dqw9nos83-dongyeol-jungs-projects.vercel.app](https://figma-projet-01-dqw9nos83-dongyeol-jungs-projects.vercel.app)
+**🚀 Live Demo**: [https://figma-projet-01-q9b32pf72-dongyeol-jungs-projects.vercel.app](https://figma-projet-01-q9b32pf72-dongyeol-jungs-projects.vercel.app)
 
 **📧 Contact**: GitHub Issues로 문의 주세요!
 import reactDom from 'eslint-plugin-react-dom'
