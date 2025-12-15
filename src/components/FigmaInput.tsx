@@ -33,7 +33,26 @@ export function FigmaInput({ onLoad, loading, error }: FigmaInputProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {loading ? (
+          // Loading Skeleton
+          <div className="space-y-4 animate-pulse">
+            <div>
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-24 mb-2"></div>
+              <div className="h-10 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            </div>
+            <div>
+              <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-32 mb-2"></div>
+              <div className="h-10 bg-slate-200 dark:bg-slate-700 rounded"></div>
+            </div>
+            <div className="flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-950/30 rounded">
+              <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
+              <span className="text-sm text-blue-600 dark:text-blue-400 font-medium">
+                Figma 파일을 불러오는 중입니다...
+              </span>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-sm font-medium mb-1 block">Figma File Key</label>
             <Input
@@ -86,6 +105,7 @@ export function FigmaInput({ onLoad, loading, error }: FigmaInputProps) {
             </span>
           </Button>
         </form>
+        )}
       </CardContent>
     </Card>
   );
